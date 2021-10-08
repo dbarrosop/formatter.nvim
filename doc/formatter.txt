@@ -1,0 +1,186 @@
+*formatter.txt* Helps you manage when and how to run code formatters
+
+            ______                           __  __           
+           / ____/___  _________ ___  ____ _/ /_/ /____  _____
+          / /_  / __ \/ ___/ __ `__ \/ __ `/ __/ __/ _ \/ ___/
+         / __/ / /_/ / /  / / / / / / /_/ / /_/ /_/  __/ /    
+        /_/    \____/_/  /_/ /_/ /_/\__,_/\__/\__/\___/_/     
+
+
+This plugin doesn't introduce mechanisms to define code formatters, instead,
+it leverages existing ones and let's you define when and how to run them.
+Some key features are:
+
+1. Define different formatters for different filetypes.
+2. Enable or disable running the formatter at the filetype level
+3. Enable or disable running the formatter at the buffer level
+4. Enable or disable running the formatter globally
+
+==============================================================================
+CONTENTS                                                  *formatter-contents*
+
+    1. Install ............., |formatter-install|
+    2. Usage ................ |formatter-usage|
+    3. Setup ................ |formatter-setup|
+    4. Commands ............. |formatter-commands|
+    5. Lua Module ........... |formatter-lua-module|
+    6. License .............. |formatter-license|
+
+==============================================================================
+Section 1: Install                                         *formatter-install*
+
+Using vim-plug:
+
+>
+    Plug 'dbarrosop/formatter.nvim'
+<
+
+Using packer.nvim:
+
+>
+    use 'dbarrosop/formatter.nvim'
+<
+
+==============================================================================
+Section 2: Usage                                             *formatter-usage*
+
+You need to initialize the plugin using the function |formatter.setup()|. Once
+it's been initialized you can run the |:Formatter| command to format your
+code. If you prefer to run it automatically when you save a file you can add
+an autocommand for it.
+For instance:
+>
+    au BufWritePre * :Formatter<CR>
+<
+
+==============================================================================
+Section 3: Setup                                             *formatter-setup*
+
+You need to call the |formatter.setup()| function. For example:
+>
+    lua << EOF
+    require"formatter".setup({
+        defaults = {
+            enabled = false,                                     -- by default don't format any file
+            formatter_func = "lua vim.lsp.buf.formatting_sync()" -- Use lsp to format code
+        },
+        go = {
+            enabled = true -- enable code formatting for go filetype using default formatter func
+        },
+        lua = {
+            enabled = true,                 -- enable code formatting for lua filetype
+            formatter_func = "LuaFormatter" -- use LuaFormatter command instead of lsp
+        }
+    })
+    EOF
+<
+
+==============================================================================
+Section 4: Commands                                       *formatter-commands*
+
+|:Formatter|                                                      *:Formatter*
+
+Runs the formatter. If the formatter is disabled this is a NOOP, otherwise,
+run `formatter_func`.
+
+|:FormatterInfo|                                              *:FormatterInfo*
+
+Prints on screen current configuration for the plugin
+
+|:FormatterEnable| [ft]                                     *:FormatterEnable*
+
+Enables the formatter. If a filetype is specified in the command the
+formatter is enabled for the given filetype, otherwise, it is enabled in
+the `defaults` section.
+
+|:FormatterDisable| [ft]                                   *:FormatterDisable*
+
+Disables the formatter. If a filetype is specified in the command the
+formatter is disabled for the given filetype, otherwise, it is disabled in
+the `defaults` section.
+
+|:FormatterBufferEnable|                              *:FormatterBufferEnable*
+
+Enables the formatter for the current buffer.
+
+|:FormatterBufferDisable|                            *:FormatterBufferDisable*
+
+Disables the formatter for the current buffer.
+
+==============================================================================
+Section 5: Lua Module                                    *formatter-lua-modue*
+
+
+formatter.setup({opts})                                    *formatter.setup()*
+    Setup function to be run by user.
+
+    Usage:
+>
+    require"formatter".setup({
+        defaults = {
+            enabled = false,                                     -- by default don't format any file
+            formatter_func = "lua vim.lsp.buf.formatting_sync()" -- Use lsp to format code
+        },
+        go = {
+            enabled = true -- enable code formatting for go filetype using default formatter func
+        },
+        lua = {
+            enabled = true,                 -- enable code formatting for lua filetype
+            formatter_func = "LuaFormatter" -- use LuaFormatter command instead of lsp
+        }
+    })
+<
+
+formatter.info()                                            *formatter.info()*
+    Prints current configuration
+
+formatter.enable({ft})                                    *formatter.enable()*
+    Enables the formatter for the default filetype or for a specific one.
+
+    Parameters: ~
+        {ft}    (string) Optionnal. If specified, enable the formatter for
+                this filetype. Otherwise, enable the formatter for the
+                default filetype
+
+formatter.disable({ft})                                  *formatter.disable()*
+
+    Disables the formatter for the default filetype or for a specific one.
+
+    Parameters: ~
+        {ft}    (string) Optionnal. If specified, disable the formatter for
+                this filetype. Otherwise, disable the formatter for the
+                default filetype
+
+formatter.buf_enable()                                *formatter.buf_enable()*
+
+    Enables the formatter for the current buffer.
+
+formatter.buf_disable()                              *formatter.buf_disable()*
+
+    Disables the formatter for the current buffer.
+
+==============================================================================
+Section 6: License                                         *formatter-license*
+MIT License
+
+Copyright (c) 2021 David Barroso
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+# vim: set syntax=help: set conceallevel=0
