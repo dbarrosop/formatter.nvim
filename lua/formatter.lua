@@ -15,22 +15,24 @@ end
 
 local function addUserCommands()
     local function addUserCommand(alias, cmd)
-        vim.cmd(string.format('command! %s %s', alias, cmd))
-
+        vim.cmd(string.format("command! %s lua require'formatter'.%s", alias,
+                              cmd))
     end
 
-    addUserCommand("Formatter", "lua require'formatter'.format()")
-    addUserCommand("FormatterInfo", "lua require'formatter'.info()")
+    local function addUserCommandWithArgs(alias, cmd)
+        vim.cmd(string.format(
+                    "command! -nargs=? %s call luaeval(\"require'formatter'.%s\", expand('<args>'))",
+                    alias, cmd))
+    end
 
-    vim.api.nvim_command(
-        "command! -nargs=? FormatterEnable call luaeval(\"require'formatter'.enable(_A)\", expand('<args>'))")
-    vim.api.nvim_command(
-        "command! -nargs=? FormatterDisable call luaeval(\"require'formatter'.disable(_A)\", expand('<args>'))")
+    addUserCommand("Formatter", "format()")
+    addUserCommand("FormatterInfo", "info()")
 
-    addUserCommand("FormatterBufferEnable",
-                   "lua require'formatter'.buf_enable()")
-    addUserCommand("FormatterBufferDisable",
-                   "lua require'formatter'.buf_disable()")
+    addUserCommandWithArgs("FormatterEnable", "enable(_A)")
+    addUserCommandWithArgs("FormatterDisable", "disable(_A)")
+
+    addUserCommand("FormatterBufferEnable", "buf_enable()")
+    addUserCommand("FormatterBufferDisable", "buf_disable()")
 end
 
 local function setDefaults(opts)
