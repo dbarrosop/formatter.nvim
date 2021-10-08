@@ -9,7 +9,7 @@ This plugin doesn't introduce mechanisms to define code formatters, instead, it 
 3. Enable or disable running the formatter at the buffer level
 4. Enable or disable running the formatter globally
 
-![Demo](docs/demo.svg)
+![Demo](https://raw.githubusercontent.com/dbarrosop/formatter.nvim/a2441b369e934263d6a12ddd4b918a412a619b5c/doc/demo.svg)
 
 ## Installation
 
